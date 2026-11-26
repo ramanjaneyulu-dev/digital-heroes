@@ -41,6 +41,11 @@ export default function LoginPage() {
         <Suspense>
           <LoginForm />
         </Suspense>
+        <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-zinc-300">
+          <p className="mb-2 font-medium text-amber-300">Demo accounts (test data)</p>
+          <p>Subscriber: <span className="font-mono">demo.subscriber@example.com</span> / <span className="font-mono">Demo@12345</span></p>
+          <p className="mt-1">Admin: <span className="font-mono">demo.admin@example.com</span> / <span className="font-mono">Admin@12345</span></p>
+        </div>
         <p className="mt-6 text-center text-sm text-zinc-400">
           New here?{" "}
           <Link href="/signup" className="text-emerald-400 hover:underline">Create an account</Link>

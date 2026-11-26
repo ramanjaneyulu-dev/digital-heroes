@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatMoney } from "@/lib/money";
 import { DashboardNav } from "@/components/dashboard-nav";
+import { RevealBalls } from "@/components/landing/reveal-balls";
 
 const TIER = { match_5: "5-number match", match_4: "4-number match", match_3: "3-number match" } as Record<string, string>;
 const fmtMonth = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -59,11 +60,7 @@ export default async function MyDrawsPage() {
                 <span className="text-sm text-zinc-400">{fmtMonth(d.draw_month)} · pool {formatMoney(d.pool_total_cents ?? 0)}</span>
               </div>
               <p className="mt-3 text-xs uppercase tracking-wide text-zinc-500">Winning numbers</p>
-              <p className="mt-1 flex gap-2">
-                {(d.winning_numbers ?? []).map((n) => (
-                  <span key={n} className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/15 font-semibold text-emerald-300">{n}</span>
-                ))}
-              </p>
+              <div className="mt-2"><RevealBalls numbers={d.winning_numbers ?? []} matched={e ? e.scores : []} celebrate={!!e?.tier} /></div>
               {e ? (
                 <>
                   <p className="mt-4 text-xs uppercase tracking-wide text-zinc-500">Your scores in this draw</p>
