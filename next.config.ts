@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Proof screenshots go through a Server Action; the default body limit (1 MB) is too small.
+  experimental: { serverActions: { bodySizeLimit: "6mb" } },
   turbopack: {
     rules: {
       "*.css": {

@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { formatMoney } from "@/lib/money";
 import { createDraft } from "./actions";
 import { DrawControls } from "./draw-controls";
+import { AdminNav } from "@/components/admin-nav";
 
 export default async function AdminDrawsPage() {
   await requireAdmin();
@@ -18,8 +19,8 @@ export default async function AdminDrawsPage() {
   return (
     <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-100">
       <div className="mx-auto max-w-3xl space-y-6">
-        <Link href="/admin" className="text-sm text-emerald-400 hover:underline">← Admin</Link>
         <h1 className="text-2xl font-semibold">Draws</h1>
+        <AdminNav current="/admin/draws" />
 
         <form action={createDraft} className="flex flex-wrap items-end gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
           <label className="text-sm"><span className="mb-1 block text-zinc-400">Label</span>
