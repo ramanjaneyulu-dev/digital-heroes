@@ -3,10 +3,10 @@
 A subscription web app that combines **golf score tracking**, **charity fundraising** and a **monthly prize draw**.
 It leads with charitable impact, not sport.
 
-- **Live site:** `<PASTE VERCEL URL>`
+- **Live site:** `https://digital-heroes-rho-pied.vercel.app`
 - **Demo subscriber:** `demo.subscriber@example.com` / `Demo@12345`
 - **Demo admin:** `demo.admin@example.com` / `Admin@12345`
-- **Source:** `<PASTE GITHUB URL>`
+- **Source:** `https://github.com/ramanjaneyulu-dev/digital-heroes`
 
 > **Honest note on payments.** Stripe is invite-only and Razorpay needs a PAN in India, so the live site uses a
 > clearly labelled **Demo Gateway**: no card data is collected and no real money moves. Payments sit behind a
