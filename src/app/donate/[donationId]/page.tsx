@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { isDemoMode } from "@/lib/payments";
 import { formatMoney } from "@/lib/money";
 import { payDonation } from "../actions";
 import { ChevronLeftIcon, AlertIcon, LockIcon, HeartHandIcon } from "@/components/icons";
@@ -19,7 +18,7 @@ export default async function DonatePage({ params }: { params: Promise<{ donatio
 
   const { data: c } = await supabase.from("charities").select("name, slug").eq("id", d.charity_id).maybeSingle();
   if (d.status === "paid") redirect(c ? `/charities/${c.slug}?thanks=1` : "/charities");
-  const canPay = d.status === "pending" && isDemoMode();
+  const canPay = d.status === "pending"; // donations always use the sandbox gateway
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-3 py-10 text-zinc-100 sm:px-4">

@@ -4,12 +4,11 @@ import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isDemoMode } from "@/lib/payments";
 
-// Demo gateway "pay" button for donations. Conditional updates (only while 'pending')
+// Demo gateway "pay" button for donations. Donations always use this sandbox gateway,
+// even when subscriptions are paid through Stripe (one-off gifts are outside the draw maths). Conditional updates (only while 'pending')
 // make a double-click or a replay harmless: the second one changes nothing.
 export async function payDonation(formData: FormData) {
-  if (!isDemoMode()) throw new Error("Demo checkout is disabled");
   const me = await requireUser();
   const id = String(formData.get("id") ?? "");
   const outcome = String(formData.get("outcome") ?? "success");

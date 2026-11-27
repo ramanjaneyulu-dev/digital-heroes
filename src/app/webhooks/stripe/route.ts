@@ -6,8 +6,9 @@ export async function POST(req: NextRequest) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!secretKey) {
-    return NextResponse.json({ error: "Missing STRIPE_SECRET_KEY" }, { status: 500 });
+  if (!secretKey || !webhookSecret) {
+    // Fail closed: never accept unsigned payment events.
+    return NextResponse.json({ error: "Stripe is not configured" }, { status: 500 });
   }
 
   const stripe = new Stripe(secretKey, {
@@ -17,19 +18,15 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   let event: Stripe.Event;
 
-  if (webhookSecret) {
-    const signature = req.headers.get("stripe-signature");
-    if (!signature) {
-      return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
-    }
-    try {
-      event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Invalid signature";
-      return NextResponse.json({ error: msg }, { status: 400 });
-    }
-  } else {
-    event = JSON.parse(rawBody) as Stripe.Event;
+  const signature = req.headers.get("stripe-signature");
+  if (!signature) {
+    return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
+  }
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Invalid signature";
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
@@ -41,10 +38,16 @@ export async function POST(req: NextRequest) {
 
     if (internalSessionId && stripePaymentId) {
       const admin = createAdminClient();
-      await admin.rpc("complete_checkout", {
+      // complete_checkout is idempotent: an already-paid session returns quietly.
+      const { error } = await admin.rpc("complete_checkout", {
         p_session_id: internalSessionId,
         p_provider_payment_id: stripePaymentId,
       });
+      if (error) {
+        console.error("complete_checkout failed:", error.message);
+        // A non-2xx answer makes Stripe retry the event later.
+        return NextResponse.json({ error: "Could not record payment" }, { status: 500 });
+      }
     }
   }
 
