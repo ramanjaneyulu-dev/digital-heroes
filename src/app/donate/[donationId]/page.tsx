@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { isDemoMode } from "@/lib/payments";
 import { formatMoney } from "@/lib/money";
 import { payDonation } from "../actions";
+import { ChevronLeftIcon, AlertIcon, LockIcon, HeartHandIcon } from "@/components/icons";
 
 export default async function DonatePage({ params }: { params: Promise<{ donationId: string }> }) {
   const { donationId } = await params;
@@ -21,34 +22,64 @@ export default async function DonatePage({ params }: { params: Promise<{ donatio
   const canPay = d.status === "pending" && isDemoMode();
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-10 text-zinc-100">
-      <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/60 p-8">
-        <p className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-          DEMO GATEWAY · test mode. No real money moves and no card details are collected.
-        </p>
-        <h1 className="text-xl font-semibold">Confirm your donation</h1>
-        <dl className="my-6 space-y-3 text-sm">
-          <div className="flex justify-between"><dt className="text-zinc-400">To</dt><dd>{c?.name ?? "-"}</dd></div>
-          <div className="flex justify-between border-t border-zinc-800 pt-3 text-base font-semibold"><dt>Amount</dt><dd>{formatMoney(d.amount_cents)}</dd></div>
-        </dl>
-        {d.status === "failed" && (
-          <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-            The test card was declined. <Link href={c ? `/charities/${c.slug}` : "/charities"} className="underline">Try again</Link>
+    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-3 py-10 text-zinc-100 sm:px-4">
+      <div className="w-full max-w-md">
+        <Link
+          href={c ? `/charities/${c.slug}` : "/charities"}
+          className="mb-4 inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200"
+        >
+          <ChevronLeftIcon size={14} /> Back
+        </Link>
+        <div className="glass-card p-5 sm:p-8">
+          <p className="alert-banner mb-4" data-tone="amber">
+            <AlertIcon size={16} className="mt-0.5 text-amber-300" />
+            <span className="flex-1 text-xs">DEMO GATEWAY · test mode. No real money moves and no card details are collected.</span>
           </p>
-        )}
-        {canPay && (
-          <div className="space-y-3">
-            <form action={payDonation}>
-              <input type="hidden" name="id" value={d.id} /><input type="hidden" name="outcome" value="success" />
-              <button className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-zinc-950 hover:bg-emerald-400">Donate {formatMoney(d.amount_cents)} with test card</button>
-            </form>
-            <form action={payDonation}>
-              <input type="hidden" name="id" value={d.id} /><input type="hidden" name="outcome" value="decline" />
-              <button className="w-full rounded-xl border border-zinc-700 px-4 py-3 text-sm text-zinc-300 hover:bg-zinc-800">Simulate a declined card</button>
-            </form>
+          <div className="flex items-center gap-2">
+            <HeartHandIcon size={18} className="text-emerald-300" />
+            <h1 className="text-xl font-semibold">Confirm your donation</h1>
           </div>
-        )}
-        <p className="mt-6 text-center text-xs text-zinc-500"><Link href={c ? `/charities/${c.slug}` : "/charities"} className="hover:text-zinc-300">Cancel</Link></p>
+          <dl className="my-6 space-y-3 text-sm">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <dt className="text-zinc-400">To</dt>
+              <dd className="break-token text-zinc-100">{c?.name ?? "-"}</dd>
+            </div>
+            <div className="flex flex-wrap items-baseline justify-between gap-2 border-t border-white/10 pt-3 text-base font-semibold">
+              <dt>Amount</dt>
+              <dd className="break-token">{formatMoney(d.amount_cents)}</dd>
+            </div>
+          </dl>
+          {d.status === "failed" && (
+            <div className="alert-banner mb-4" data-tone="red">
+              <AlertIcon size={16} className="mt-0.5 text-red-300" />
+              <span className="flex-1 text-sm">
+                The test card was declined.{" "}
+                <Link href={c ? `/charities/${c.slug}` : "/charities"} className="underline">Try again</Link>
+              </span>
+            </div>
+          )}
+          {canPay && (
+            <div className="space-y-3">
+              <form action={payDonation}>
+                <input type="hidden" name="id" value={d.id} />
+                <input type="hidden" name="outcome" value="success" />
+                <button className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-zinc-950 transition hover:bg-emerald-400">
+                  Donate {formatMoney(d.amount_cents)} with test card
+                </button>
+              </form>
+              <form action={payDonation}>
+                <input type="hidden" name="id" value={d.id} />
+                <input type="hidden" name="outcome" value="decline" />
+                <button className="w-full rounded-xl border border-zinc-700 px-4 py-3 text-sm text-zinc-300 transition hover:bg-zinc-800">
+                  Simulate a declined card
+                </button>
+              </form>
+            </div>
+          )}
+          <p className="mt-6 flex items-center justify-center gap-1 text-center text-xs text-zinc-500">
+            <LockIcon size={12} /> Demo gateway · no real charges
+          </p>
+        </div>
       </div>
     </main>
   );

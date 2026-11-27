@@ -6,6 +6,7 @@ import { getSettings } from "@/lib/settings";
 import { getSubscriptionState } from "@/lib/subscription";
 import { isDemoMode } from "@/lib/payments";
 import { SubscribeForm } from "./subscribe-form";
+import { ChevronLeftIcon, HeartHandIcon, AlertIcon } from "@/components/icons";
 
 export default async function SubscribePage() {
   const profile = await requireUser();
@@ -20,18 +21,36 @@ export default async function SubscribePage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-100">
-      <div className="mx-auto max-w-3xl">
-        <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-zinc-200">← Back to dashboard</Link>
-        <h1 className="mt-4 text-3xl font-semibold">Join the draw. Fund a cause.</h1>
-        <p className="mb-8 mt-2 text-zinc-400">Every plan backs a charity of your choice and enters you into the monthly prize draw.</p>
+    <main className="min-h-screen bg-zinc-950 px-3 py-8 text-zinc-100 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-3xl space-y-6">
+        <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200">
+          <ChevronLeftIcon size={14} /> Back to dashboard
+        </Link>
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+            <HeartHandIcon size={18} />
+          </span>
+          <div>
+            <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">Join the draw. Fund a cause.</h1>
+            <p className="mt-1 text-sm text-zinc-400 sm:text-base">
+              Every plan backs a charity of your choice and enters you into the monthly prize draw.
+            </p>
+          </div>
+        </div>
+
         {isDemoMode() && (
-          <p className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
-            Demo payments: no real money is charged and no card details are collected.
+          <p className="alert-banner" data-tone="amber">
+            <AlertIcon size={18} className="mt-0.5 text-amber-300" />
+            <span className="flex-1 text-sm">
+              Demo payments: no real money is charged and no card details are collected.
+            </span>
           </p>
         )}
+
         {(plans?.length ?? 0) === 0 || (charities?.length ?? 0) === 0 ? (
-          <p className="text-zinc-400">Plans or charities are not set up yet.</p>
+          <p className="rounded-xl border border-dashed border-zinc-700 p-6 text-center text-zinc-400">
+            Plans or charities are not set up yet.
+          </p>
         ) : (
           <SubscribeForm
             plans={plans ?? []}
