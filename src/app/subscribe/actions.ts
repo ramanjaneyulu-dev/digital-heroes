@@ -69,5 +69,6 @@ export async function startCheckout(
     .single();
 
   if (error || !session) return { error: "Could not start checkout. Please try again." };
-  redirect(provider.getCheckoutUrl(session.id));
+  const checkoutUrl = await provider.getCheckoutUrl(session.id);
+  redirect(checkoutUrl);
 }

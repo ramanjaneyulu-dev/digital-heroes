@@ -3,7 +3,7 @@
 export interface PaymentProvider {
   readonly name: string;
   /** Where the customer goes to pay for an existing checkout session. */
-  getCheckoutUrl(sessionId: string): string;
+  getCheckoutUrl(sessionId: string): string | Promise<string>;
   /** Ask the provider to stop future renewals. */
   cancelSubscription(providerSubscriptionId: string | null): Promise<void>;
 }

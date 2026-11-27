@@ -5,6 +5,7 @@ import { getSettings } from "@/lib/settings";
 import { getSubscriptionState } from "@/lib/subscription";
 import { DashboardNav } from "@/components/dashboard-nav";
 import { CharityForm } from "./charity-form";
+import { ChevronLeftIcon, HeartHandIcon } from "@/components/icons";
 
 export default async function MyCharityPage() {
   const me = await requireUser();
@@ -19,13 +20,30 @@ export default async function MyCharityPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-100">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <Link href="/dashboard" className="text-sm text-emerald-400 hover:underline">← Back to dashboard</Link>
-        <h1 className="text-2xl font-semibold">Your charity</h1>
+    <main className="min-h-screen bg-zinc-950 px-3 py-8 text-zinc-100 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-3xl space-y-6">
+        <Link href="/dashboard" className="inline-flex items-center gap-1 text-sm text-emerald-400 hover:underline">
+          <ChevronLeftIcon size={14} /> Back to dashboard
+        </Link>
+        <div className="flex items-center gap-3">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+            <HeartHandIcon size={18} />
+          </span>
+          <h1 className="text-xl font-semibold sm:text-2xl">Your charity</h1>
+        </div>
         <DashboardNav current="/dashboard/charity" />
-        <p className="text-sm text-zinc-400">Choose who your subscription supports and how much of it. Changes apply from your next payment. Want to give extra? <Link href="/charities" className="text-emerald-400 hover:underline">Make a one-off donation</Link>.</p>
-        {(charities ?? []).length === 0 ? <p className="text-zinc-400">No charities are available yet.</p> : (
+
+        <p className="text-sm text-zinc-400">
+          Choose who your subscription supports and how much of it. Changes apply from your next payment.
+          Want to give extra?{" "}
+          <Link href="/charities" className="text-emerald-400 hover:underline">Make a one-off donation</Link>.
+        </p>
+
+        {(charities ?? []).length === 0 ? (
+          <p className="rounded-xl border border-dashed border-zinc-700 p-6 text-center text-zinc-400">
+            No charities are available yet.
+          </p>
+        ) : (
           <CharityForm
             charities={charities ?? []}
             currentId={me.charity_id}
