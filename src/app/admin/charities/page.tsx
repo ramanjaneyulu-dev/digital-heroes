@@ -18,7 +18,7 @@ export default async function AdminCharitiesPage() {
   const t = new Map(((totals ?? []) as Totals[]).map((x) => [x.charity_id, x]));
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-100">
+    <main className="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-2xl font-semibold">Charities</h1>
@@ -30,19 +30,23 @@ export default async function AdminCharitiesPage() {
             const x = t.get(c.id);
             return (
               <li key={c.id}>
-                <Link href={`/admin/charities/${c.id}`} className="flex items-center gap-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 hover:border-emerald-500/50">
-                  <CharityImage name={c.name} url={c.image_url} className="h-16 w-16 shrink-0 rounded-xl !text-xl" />
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium">{c.name}</p>
-                    <p className="text-sm text-zinc-400">{c.category ?? "No category"} · /{c.slug}</p>
+                <Link href={`/admin/charities/${c.id}`} className="flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 hover:border-emerald-500/50 sm:flex-row sm:items-center sm:gap-4">
+                  <div className="flex min-w-0 flex-1 items-center gap-4">
+                    <CharityImage name={c.name} url={c.image_url} className="h-16 w-16 shrink-0 rounded-xl !text-xl" />
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words font-medium">{c.name}</p>
+                      <p className="break-words text-sm text-zinc-400">{c.category ?? "No category"} · /{c.slug}</p>
+                    </div>
                   </div>
-                  <div className="text-right text-sm">
-                    <p className="text-emerald-300">{formatMoney(Number(x?.contributions_cents ?? 0) + Number(x?.donations_cents ?? 0))}</p>
-                    <p className="text-xs text-zinc-500">{Number(x?.supporters ?? 0)} supporters</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 text-xs">
-                    {c.is_featured && <span className="rounded-full bg-amber-400/15 px-2 py-0.5 text-amber-300">Featured</span>}
-                    <span className={`rounded-full px-2 py-0.5 ${c.is_active ? "bg-emerald-500/15 text-emerald-300" : "bg-zinc-700/50 text-zinc-400"}`}>{c.is_active ? "Visible" : "Hidden"}</span>
+                  <div className="flex items-center justify-between gap-4 sm:justify-end">
+                    <div className="text-sm sm:text-right">
+                      <p className="text-emerald-300">{formatMoney(Number(x?.contributions_cents ?? 0) + Number(x?.donations_cents ?? 0))}</p>
+                      <p className="text-xs text-zinc-500">{Number(x?.supporters ?? 0)} supporters</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 text-xs">
+                      {c.is_featured && <span className="rounded-full bg-amber-400/15 px-2 py-0.5 text-amber-300">Featured</span>}
+                      <span className={`rounded-full px-2 py-0.5 ${c.is_active ? "bg-emerald-500/15 text-emerald-300" : "bg-zinc-700/50 text-zinc-400"}`}>{c.is_active ? "Visible" : "Hidden"}</span>
+                    </div>
                   </div>
                 </Link>
               </li>

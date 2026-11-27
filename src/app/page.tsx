@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { CharityImage } from "@/components/charity-avatar";
 import { Reveal } from "@/components/landing/reveal";
 import { AnimatedCounter } from "@/components/landing/counter";
+import { ImpactTicker } from "@/components/landing/impact-ticker";
 
 // Public landing page. Leads with charitable impact (PRD §12), then explains what you do,
 // how you win, and what it costs, with one clear call to action.
@@ -60,19 +61,37 @@ export default async function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute right-0 top-24 h-48 w-48 rounded-full bg-amber-400/10 blur-3xl" />
-        <div className="relative mx-auto max-w-4xl px-6 pb-16 pt-20 text-center">
+        {/* Animated glow: three slow-drifting blurred orbs plus a faint dot grid */}
+        <div aria-hidden className="hero-grid pointer-events-none absolute inset-0 opacity-40" />
+        <div aria-hidden className="glow-drift-a pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-3xl" />
+        <div aria-hidden className="glow-drift-b pointer-events-none absolute -left-24 top-40 h-64 w-64 rounded-full bg-teal-400/10 blur-3xl" />
+        <div aria-hidden className="glow-drift-c pointer-events-none absolute -right-10 top-24 h-56 w-56 rounded-full bg-amber-400/10 blur-3xl" />
+        <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-16 text-center sm:px-6 sm:pt-20">
           <Reveal>
             <p className="mb-4 text-sm uppercase tracking-[0.2em] text-emerald-400">Play. Give. Win.</p>
             <h1 className="font-[family-name:var(--font-display)] text-5xl font-semibold leading-tight sm:text-6xl">
-              Your game. <span className="text-emerald-400">Their future.</span>
+              Your game. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Their future.</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-400">
+
+            {/* Cinematic impact line: words rise in one after another */}
+            <p className="mx-auto mt-6 max-w-2xl font-[family-name:var(--font-display)] text-xl italic leading-snug text-zinc-200 sm:text-2xl" aria-label="Every round you play puts someone's tomorrow in motion.">
+              {["Every", "round", "you", "play", "puts", "someone's", "tomorrow", "in", "motion."].map((w, i) => (
+                <span key={i} aria-hidden className={`impact-word ${w === "tomorrow" ? "text-emerald-300" : ""}`} style={{ ["--i" as string]: i } as React.CSSProperties}>{w}{" "}</span>
+              ))}
+            </p>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-zinc-400 sm:text-lg">
               Every subscription funds a charity you choose, and every month your latest scores could win a share of the prize pool.
             </p>
+
+            {/* Decorative draw balls (aria-hidden): the lottery feel at a glance */}
+            <div aria-hidden className="mt-8 flex justify-center gap-2.5 sm:gap-3">
+              {[7, 18, 24, 33, 41].map((n, i) => (
+                <span key={n} className="draw-ball" style={{ ["--i" as string]: i } as React.CSSProperties}>{n}</span>
+              ))}
+            </div>
+
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/subscribe" className="rounded-xl bg-emerald-500 px-7 py-3.5 text-lg font-semibold text-zinc-950 shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-400 active:translate-y-0">
+              <Link href="/subscribe" className="cta-pulse rounded-xl bg-emerald-500 px-7 py-3.5 text-lg font-semibold text-zinc-950 shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-400 active:translate-y-0">
                 Start giving: subscribe
               </Link>
               <a href="#how" className="rounded-xl border border-zinc-700 px-7 py-3.5 text-lg transition hover:bg-zinc-900">See how it works</a>
@@ -94,6 +113,17 @@ export default async function Home() {
             </Reveal>
           )}
         </div>
+
+        <ImpactTicker
+          items={[
+            ...(d ? [`₹${d.raisedRupees.toLocaleString("en-IN")} raised for charity so far`] : []),
+            "At least 10% of every subscription goes to your chosen cause",
+            ...(d ? [`₹${d.poolRupees.toLocaleString("en-IN")} in the next prize pool`] : []),
+            "Match 5 numbers to win the jackpot, and it rolls over if unclaimed",
+            ...(d ? [`${d.supporters.toLocaleString("en-IN")} active supporters and counting`] : []),
+            "Every month, a new draw. Every month, a new chance to give.",
+          ]}
+        />
       </section>
 
       {/* How it works */}
