@@ -1,5 +1,5 @@
 // Runs on every request (called from src/proxy.ts):
-//  1. refreshes the Supabase session cookie so users stay logged in
+//  1. refreshes the Supabase session cookie on protected routes so users stay logged in
 //  2. redirects visitors who are not logged in away from protected pages
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
@@ -8,6 +8,12 @@ const PROTECTED_PREFIXES = ["/dashboard", "/admin", "/subscribe", "/checkout", "
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+
+  const path = request.nextUrl.pathname;
+  const isProtected = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(p + "/"));
+
+  // Public pages don't need a session check here, saving a round trip per request.
+  if (!isProtected) return supabaseResponse;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -33,10 +39,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(p + "/"));
-
-  if (!user && isProtected) {
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";

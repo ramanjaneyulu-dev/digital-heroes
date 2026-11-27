@@ -32,9 +32,9 @@ type Pay = { id: string; kind: string; amount_cents: number; charity_cents: numb
 // The subscriber's home: every module the PRD (§10) asks for on one page.
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ subscribed?: string }> }) {
   const { subscribed } = await searchParams;
-  const me = await requireUser();
+  const [me, settings] = await Promise.all([requireUser(), getSettings()]);
   const sub = await getSubscriptionState(me.id);
-  const settings = await getSettings();
+
   const supabase = await createClient();
   const admin = createAdminClient();
 
