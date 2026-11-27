@@ -1,11 +1,12 @@
 import { demoProvider } from "./demo";
+import { stripeProvider } from "./stripe";
 import type { PaymentProvider } from "./types";
 
-// Choose the gateway with PAYMENT_PROVIDER in .env.local.
-// To add Razorpay or Stripe: create razorpay.ts implementing PaymentProvider, add a case here.
 export function getPaymentProvider(): PaymentProvider {
   const name = process.env.PAYMENT_PROVIDER ?? "demo";
   switch (name) {
+    case "stripe":
+      return stripeProvider;
     case "demo":
       return demoProvider;
     default:
