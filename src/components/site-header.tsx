@@ -7,12 +7,12 @@ export async function SiteHeader() {
   const profile = await getProfile();
   return (
     <header className="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+        <Link href="/" className="flex shrink-0 items-center gap-2 text-base font-semibold text-white sm:text-lg">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400" aria-hidden />
           Digital Heroes
         </Link>
-        <nav className="flex items-center gap-5 text-sm">
+        <nav className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-xs sm:gap-5 sm:text-sm">
           <Link href="/charities" className="text-zinc-300 hover:text-white">Charities</Link>
           {profile ? (
             <>

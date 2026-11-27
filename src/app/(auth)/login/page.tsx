@@ -34,8 +34,8 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900/50 p-8">
+    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-8">
+      <div className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-8">
         <h1 className="mb-1 text-2xl font-semibold text-white">Welcome back</h1>
         <p className="mb-6 text-sm text-zinc-400">Log in to enter scores and see your draws.</p>
         <Suspense>
@@ -43,8 +43,8 @@ export default function LoginPage() {
         </Suspense>
         <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-zinc-300">
           <p className="mb-2 font-medium text-amber-300">Demo accounts (test data)</p>
-          <p>Subscriber: <span className="font-mono">demo.subscriber@example.com</span> / <span className="font-mono">Demo@12345</span></p>
-          <p className="mt-1">Admin: <span className="font-mono">demo.admin@example.com</span> / <span className="font-mono">Admin@12345</span></p>
+          <p>Subscriber: <span className="break-all font-mono">demo.subscriber@example.com</span> / <span className="break-all font-mono">Demo@12345</span></p>
+          <p className="mt-1">Admin: <span className="break-all font-mono">demo.admin@example.com</span> / <span className="break-all font-mono">Admin@12345</span></p>
         </div>
         <p className="mt-6 text-center text-sm text-zinc-400">
           New here?{" "}
